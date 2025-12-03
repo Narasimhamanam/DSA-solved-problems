@@ -1,0 +1,97 @@
+Smallest Positive Missing                 [Difficulty: Medium]
+
+You are given an integer array arr[]. Your task is to find the smallest positive number missing from the array.
+
+Note: Positive number starts from 1. The array can have negative integers too.
+
+Examples:
+
+Input: arr[] = [2, -3, 4, 1, 1, 7]
+Output: 3
+Explanation: Smallest positive missing number is 3.
+Input: arr[] = [5, 3, 2, 5, 1]
+Output: 4
+Explanation: Smallest positive missing number is 4.
+Input: arr[] = [-8, 0, -1, -4, -3]
+Output: 1
+Explanation: Smallest positive missing number is 1.
+
+CODE:
+***********--------------------APPROACH 1---------------------***********
+class Solution:
+    def missingNumber(self, arr):
+        # code here
+        
+        # we need to sort the array first
+        arr.sort()
+        res = 1
+        
+        for num in arr:
+            # if we found that element in array bthen check for next positive
+            if num == res:
+                res += 1
+            # if we dont found the element then return result by breaking loop
+            elif num > res:
+                break
+            
+        return res
+
+TIME COMPLEXITY : FOR SORTING O(nlogn) + FOR CHECKING O(n) overall O(nlogn)
+SPACE COMPLEXITY : O(1)
+
+***********--------------------APPROACH 2---------------------***********
+CODE:
+class Solution:
+    def missingNumber(self, arr):
+        n = len(arr)
+        
+        # to mark the occurrence of elements
+        visited = [False]*n
+        
+        for i in range(n):
+            
+            # if element is in range from 1 to n
+            # then mark it as visited
+            if 0 < arr[i] <= n:
+                visited[arr[i] - 1] = True
+                
+        # find the first element which is unvisited 
+        # in the original array
+        for i in range(1,n+1):
+            if not visited[i-1]:
+                return i
+                
+        # if all elements from 1 to n are visited
+        # then n+1 will be first positive missing number
+        return n+1
+
+TIME COMPLEXITY : O(N)
+SPACE COMPLEXITY : O(N)
+
+***********--------------------APPROACH 3---------------------***********
+USING CYCLE SORT
+CODE:
+class Solution:
+    def missingNumber(self, arr):
+        n = len(arr)
+
+        i = 0
+        while i < n:
+            correct_index = arr[i] - 1
+            # only swap when arr[i] is 1..n AND not already in correct place
+            if 1 <= arr[i] <= n and arr[i] != arr[correct_index]:
+                arr[i], arr[correct_index] = arr[correct_index], arr[i]
+            else:
+                i += 1
+
+        # find first missing
+        for i in range(1, n + 1):
+            if arr[i - 1] != i:
+                return i
+
+        return n + 1
+
+TIME COMPLEXITY : O(N)
+SPACE COMPLEXITY : O(1)
+
+        
